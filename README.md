@@ -1,4 +1,4 @@
-# Django API de Autenticação por Email
+# Django API CustomUser / Email / Token 
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![Django](https://img.shields.io/badge/Django-4.2%2B-green)](https://www.djangoproject.com/)
