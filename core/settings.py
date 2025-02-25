@@ -11,22 +11,37 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+from decouple import config, Csv
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')  # Caminho explícito para o .env
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wqke5n)su+$#ifut=p74p$s0=m(a1-5%4+6-jcx8chgm4c(t@)'
+# SECRET_KEY = 'django-insecure-wqke5n)su+$#ifut=p74p$s0=m(a1-5%4+6-jcx8chgm4c(t@)'
+
+# Configurações de segurança
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-wqke5n)su+$#ifut=p74p$s0=m(a1-5%4+6-jcx8chgm4c(t@)')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if env.bool('MODO_LOCAL') == True:
+    DEBUG = True
+    ALLOWED_HOSTS = ['*']
+    CORS_ALLOW_ALL_ORIGINS = True
+    print('Modo de desenvolvimento ativado.')
+# DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,6 +58,9 @@ INSTALLED_APPS = [
     
     # Apps locais
     'accounts',
+
+    'whitenoise.runserver_nostatic',
+    'corsheaders',
 ]
 
 # Configuração para usar nosso modelo de usuário customizado
@@ -60,7 +78,9 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -92,13 +112,37 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Configuração do Banco de Dados
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
+# Heroku PostgreSQL - substitui a configuração acima em produção
+DATABASE_URL = config('DATABASE_URL', default=None)
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True
+    )
+
+# Configurações para arquivos estáticos
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Configurações de CORS para permitir requisições do seu app React Native e portal web
+# CORS_ALLOWED_ORIGINS = config(
+#     'CORS_ALLOWED_ORIGINS',
+#     default='http://localhost:3000,http://localhost:8081',
+#     cast=Csv()
+# )
+CORS_ALLOWED_ORIGINS = []
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
