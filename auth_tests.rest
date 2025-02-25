@@ -1,0 +1,32 @@
+### Variáveis
+@baseUrl = http://localhost:8000/api
+@token = 14e2b421c53cd5abd7bfd86338fab9d52f76b42d
+
+### Registrar um novo usuário
+POST {{baseUrl}}/accounts/signup/
+Content-Type: application/json
+
+{
+  "email": "usuario@exemplo.com",
+  "password": "senha_segura123",
+  "password_confirm": "senha_segura123",
+  "first_name": "Nome",
+  "last_name": "Sobrenome"
+}
+
+### Login
+POST {{baseUrl}}/accounts/login/
+Content-Type: application/json
+
+{
+  "email": "usuario@exemplo.com",
+  "password": "senha_segura123"
+}
+
+### Testar token (copie o token da resposta do login acima)
+GET {{baseUrl}}/accounts/test-token/
+Authorization: Token {{token}}
+
+### Logout
+POST {{baseUrl}}/accounts/logout/
+Authorization: Token {{token}}
