@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone')
+        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf')
         read_only_fields = ('id',)
 
 
@@ -25,7 +25,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 'role', 'phone')
+        fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 'role', 'phone', 'cpf')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -50,6 +50,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', ''),
             role=validated_data.get('role', ''),
             phone=validated_data.get('phone', ''),
+            cpf=validated_data.get('cpf', '')
         )
         
         return user

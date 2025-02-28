@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
+from .models import CustomUser
 
 from .serializers import UserSerializer, UserCreateSerializer, AuthTokenSerializer
 
@@ -45,7 +46,9 @@ class LoginView(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.id,
-            'email': user.email
+            'email': user.email,
+            'name': user.first_name + ' ' + user.last_name,
+            'role': user.role
         })
 
 
@@ -73,3 +76,12 @@ class TestTokenView(APIView):
             "message": "Token válido",
             "user": UserSerializer(request.user).data
         })
+    
+class ListUsersView(generics.ListAPIView):
+    """
+    View para listar usuários.
+    """
+    
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]

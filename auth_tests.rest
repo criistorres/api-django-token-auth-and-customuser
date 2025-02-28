@@ -1,19 +1,20 @@
 ### Variáveis
 @baseUrl = http://localhost:8000/api
-@token = bdfaf18330537792565850ad185efc6d13141a4b
+@token = f2224f9bdf7b96a19643bfdb30c9cc91dbe0917b
 
 ### Registrar um novo usuário
 POST {{baseUrl}}/accounts/signup/
 Content-Type: application/json
 
 {
-  "email": "usuario2@exemplo.com",
-  "password": "senha_segura123",
-  "password_confirm": "senha_segura123",
-  "first_name": "Nome",
+  "email": "cristian.rst222@hotmail.com",
+  "password": "123456",
+  "password_confirm": "123456",
+  "first_name": "Arthur",
   "last_name": "Sobrenome",
-  "phone": "99999999999",
-  "role": "motorista"
+  "phone": "11999532631",
+  "role": "motorista",
+  "cpf": "45495658881 "
 }
 
 ### Login
@@ -21,8 +22,8 @@ POST {{baseUrl}}/accounts/login/
 Content-Type: application/json
 
 {
-  "email": "usuario1@exemplo.com",
-  "password": "senha_segura123"
+  "email": "cristian.rst@hotmail.com",
+  "password": "123456"
 }
 
 ### Testar token (copie o token da resposta do login acima)
@@ -32,3 +33,6 @@ Authorization: Token {{token}}
 ### Logout
 POST {{baseUrl}}/accounts/logout/
 Authorization: Token {{token}}
+
+### Listar usuários
+GET {{baseUrl}}/accounts/list-users/

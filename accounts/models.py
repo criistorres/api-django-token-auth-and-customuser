@@ -52,6 +52,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     ]
     role = models.CharField('Função', max_length=30, choices=ROLE_CHOICES, blank=True)
     phone = models.CharField('Telefone', max_length=15, blank=True)
+    cpf = models.CharField('CPF', max_length=11, blank=True, unique=True)
 
     objects = CustomUserManager()
 
