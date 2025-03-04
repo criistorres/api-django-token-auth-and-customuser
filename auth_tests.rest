@@ -1,20 +1,20 @@
 ### Variáveis
 @baseUrl = http://localhost:8000/api
-@token = f2224f9bdf7b96a19643bfdb30c9cc91dbe0917b
+@token = 2e35ba5199655be25ec3c26c6a647cd0850e61a5
 
 ### Registrar um novo usuário
 POST {{baseUrl}}/accounts/signup/
 Content-Type: application/json
 
 {
-  "email": "cristian.rst222@hotmail.com",
+  "email": "cristian.rst3@hotmail.com",
   "password": "123456",
   "password_confirm": "123456",
-  "first_name": "Arthur",
-  "last_name": "Sobrenome",
+  "first_name": "Cristian 2",
+  "last_name": "Torres",
   "phone": "11999532631",
-  "role": "motorista",
-  "cpf": "45495658881 "
+  "role": "logistica",
+  "cpf": "45495658885"
 }
 
 ### Login
@@ -36,3 +36,32 @@ Authorization: Token {{token}}
 
 ### Listar usuários
 GET {{baseUrl}}/accounts/list-users/
+
+### Ativar um usuário
+POST {{baseUrl}}/accounts/activate/7/
+Authorization: Token {{token}}
+
+### Desativar um usuário
+POST {{baseUrl}}/accounts/deactivate/7/
+Authorization: Token {{token}}
+
+### Editar um usuário
+POST {{baseUrl}}/accounts/edit-user-admin/7/
+Content-Type: application/json
+
+{
+  "senha_admin": "Beauty807*",
+  "first_name": "Cristian",
+  "last_name": "Torres",
+  "email": "cristian.rst6@hotmail.com",
+  "role": "logistica",
+  "is_active": false,
+  "is_staff": false,
+  "phone": "11999532631",
+  "cpf": "45495658885"
+}
+
+### Obter detalhes de um usuário
+GET {{baseUrl}}/accounts/user/7/
+Authorization: Token {{token}}
+

@@ -43,7 +43,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Endereço de email', unique=True)
     first_name = models.CharField('Nome', max_length=30, blank=True)
     last_name = models.CharField('Sobrenome', max_length=30, blank=True)
-    is_active = models.BooleanField('Ativo', default=True)
+    is_active = models.BooleanField('Ativo', default=False)
     is_staff = models.BooleanField('Staff', default=False)
     date_joined = models.DateTimeField('Data de registro', default=timezone.now)
     ROLE_CHOICES = [

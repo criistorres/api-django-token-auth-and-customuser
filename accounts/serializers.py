@@ -12,8 +12,19 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf')
+        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf', 'is_active')
         read_only_fields = ('id',)
+
+class UserAdminSerializer(serializers.ModelSerializer):
+    """
+    Serializer para o modelo de usuário para a visualização de administradores.
+    """
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf', 'is_active', 'is_staff')
+        read_only_fields = ('id',)
+  
 
 
 class UserCreateSerializer(serializers.ModelSerializer):

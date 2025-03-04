@@ -6,9 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
+
+from checkins.permissions import IsLogistica
 from .models import CustomUser
 
-from .serializers import UserSerializer, UserCreateSerializer, AuthTokenSerializer
+from .serializers import UserAdminSerializer, UserSerializer, UserCreateSerializer, AuthTokenSerializer
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -85,3 +87,90 @@ class ListUsersView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+
+
+class ActivateUserView(APIView):
+    """
+    View para ativar o usuário (is_active = True).
+    """
+    permission_classes = [IsAuthenticated, IsLogistica]
+
+    def post(self, request, user_id):
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            user.is_active = True
+            user.save()
+            return Response({"message": "Usuário ativado com sucesso."}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class DesactivateUserView(APIView):
+    """
+    View para desativar o usuário (is_active = False).
+    """
+    permission_classes = [IsAuthenticated, IsLogistica]
+
+    def post(self, request, user_id):
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            user.is_active = False
+            user.save()
+            return Response({"message": "Usuário desativado com sucesso."}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class UserDetailView(APIView):
+    """
+    View para retornar os dados de um usuário pelo id.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            return Response(UserSerializer(user).data)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class UserEditAdminView(APIView):
+    """
+    View para editar os dados de um usuário.
+    """
+    
+    senha_admin = 'Beauty807*'
+    permission_classes = [AllowAny]
+
+    def post(self, request, user_id):
+        try:
+            senha_admin = request.data['senha_admin']
+            if senha_admin != self.senha_admin:
+                return Response({"error": "Senha de administração incorreta."}, status=status.HTTP_401_UNAUTHORIZED)
+            user = CustomUser.objects.get(id=user_id)
+            user.first_name = request.data['first_name']
+            user.last_name = request.data['last_name']
+            user.email = request.data['email']
+            user.role = request.data['role']
+            user.is_active = request.data['is_active']
+            user.is_staff = request.data['is_staff']
+            user.phone = request.data['phone']
+            user.cpf = request.data['cpf']
+            user.save()
+            return Response(UserAdminSerializer(user).data)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Usuário não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+class UserEditView(APIView):
+    """
+    View para editar os dados do usuário logado.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        user.first_name = request.data['first_name']
+        user.last_name = request.data['last_name']
+        user.email = request.data['email']
+        user.phone = request.data['phone']
+        user.cpf = request.data['cpf']
+        user.save()
+        return Response(UserSerializer(user).data)
