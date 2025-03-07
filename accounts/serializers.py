@@ -12,19 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf', 'is_active')
+        fields = ('id', 'email', 'first_name', 'last_name')
         read_only_fields = ('id',)
-
-class UserAdminSerializer(serializers.ModelSerializer):
-    """
-    Serializer para o modelo de usuário para a visualização de administradores.
-    """
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'phone', 'cpf', 'is_active', 'is_staff')
-        read_only_fields = ('id',)
-  
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -36,7 +25,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 'role', 'phone', 'cpf')
+        fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -58,10 +47,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
-            role=validated_data.get('role', ''),
-            phone=validated_data.get('phone', ''),
-            cpf=validated_data.get('cpf', '')
+            last_name=validated_data.get('last_name', '')
         )
         
         return user

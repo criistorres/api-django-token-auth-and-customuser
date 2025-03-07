@@ -69,9 +69,6 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-6.1 Inicie o servidor de desenvolvimento com o IP da sua máquina para ficar disponivel na sua rede:
-```bash
-python manage.py runserver 0.0.0.0:8000
 ## 📊 Estrutura do Projeto
 
 ```

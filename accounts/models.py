@@ -43,16 +43,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('Endereço de email', unique=True)
     first_name = models.CharField('Nome', max_length=30, blank=True)
     last_name = models.CharField('Sobrenome', max_length=30, blank=True)
-    is_active = models.BooleanField('Ativo', default=False)
+    is_active = models.BooleanField('Ativo', default=True)
     is_staff = models.BooleanField('Staff', default=False)
     date_joined = models.DateTimeField('Data de registro', default=timezone.now)
-    ROLE_CHOICES = [
-        ('motorista', 'Motorista'),
-        ('logistica', 'Logística'),
-    ]
-    role = models.CharField('Função', max_length=30, choices=ROLE_CHOICES, blank=True)
-    phone = models.CharField('Telefone', max_length=15, blank=True)
-    cpf = models.CharField('CPF', max_length=11, blank=True, unique=True)
 
     objects = CustomUserManager()
 
@@ -78,6 +71,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         Retorna o primeiro nome do usuário.
         """
         return self.first_name
-    
-    def is_logistica(self):
-        return self.role == 'logistica'
